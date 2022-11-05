@@ -1,0 +1,146 @@
+<h1>Uso de Formulario de template de forma independiente FormControl</h1>
+<div class="container pt-2">
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input [formControl]="emailField" type="email" class="form-control" />
+
+    <div *ngIf="emailField.touched || emailField.dirty">
+      <div *ngIf="emailField.hasError('required')">Este campo es requerido</div>
+
+      <div *ngIf="emailField.hasError('rangelength')">
+        Ingrese al menos
+        {{ emailField.getError("rangelength").minLength }} caracteres y como
+        maximo {{ emailField.getError("rangelength").maxLength }}, actual
+        logitud {{ emailField.getError("rangelength").length }}
+      </div>
+
+      <div *ngIf="emailField.hasError('emailFormat')">
+        {{ emailField.getError("emailFormat") }}
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary">Ingresar</button>
+</div>
+
+<h1>Uso de Formulario de template de forma grupal FormGroup</h1>
+<div class="container pt-2">
+  <form [formGroup]="studentForm" (ngSubmit)="save()">
+    <div class="mb-3">
+      <label class="form-label">Nombres</label>
+      <input formControlName="firstName" class="form-control" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Apellidos</label>
+      <input formControlName="lastName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input formControlName="email" type="email" class="form-control" />
+
+      <div *ngIf="emailControl.touched || emailControl.dirty">
+        <div *ngIf="emailControl.hasError('required')">
+          Este campo es requerido
+        </div>
+
+        <div *ngIf="emailControl.hasError('rangelength')">
+          Ingrese al menos
+          {{ emailControl.getError("rangelength").minLength }} caracteres y como
+          maximo {{ emailControl.getError("rangelength").maxLength }}, actual
+          logitud {{ emailControl.getError("rangelength").length }}
+        </div>
+
+        <div *ngIf="emailControl.hasError('emailFormat')">
+          {{ emailControl.getError("emailFormat") }}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input formControlName="password" class="form-control" />
+      <div *ngIf="passwordControl.touched && passwordControl.hasError('required')">
+        Este campo es requerido
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Confirmar Contraseña</label>
+      <input formControlName="confirmPassword" class="form-control" />
+      <div *ngIf="passwordControl.touched && passwordControl.hasError('required')">
+        Este campo es requerido
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Photo</label>
+      <app-input-file accept="image/*" formControlName="photo"></app-input-file>
+      <div *ngIf="photoControl.touched && photoControl.hasError('extension')">
+        {{ photoControl.getError('extension') }}
+      </div>
+    </div>
+
+    <div *ngIf="passwordControl.touched && confirmPasswordControl.touched && studentForm.hasError('compareFields')">
+      Las contraseñas no coinciden
+    </div>
+
+    <ng-container formGroupName="ubigeo">
+      <div class="mb-3">
+        <label class="form-label">Departamento</label>
+        <select formControlName="department" class="form-control">
+          <option value=""></option>
+          <option *ngFor="let option of departments" [value]="option.id_ubigeo">
+            {{ option.nombre_ubigeo }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Provincia</label>
+        <select formControlName="province" class="form-control">
+          <option value=""></option>
+          <option *ngFor="let option of provinces" [value]="option.id_ubigeo">
+            {{ option.nombre_ubigeo }}
+          </option>
+        </select>
+      </div>
+    </ng-container>
+
+    <button class="btn btn-sm btn-info" (click)="addNewPhone()" >Agregar telefono adicional</button>
+
+    <ng-container formArrayName="phones">
+      <div *ngFor="let control of phonesArray.controls; let i = index" class="mb-3">
+        <label class="form-label">Telefono/Celular</label>
+        <input [formControlName]="i" class="form-control" />
+        <button class="btn btn-danger" (click)="removePhone(i)">X</button>
+      </div>
+    </ng-container>
+
+
+    <button class="btn btn-sm btn-info" (click)="addContactInfo()" >Agregar contacto adicional</button>
+
+    <ng-container formArrayName="contactInfo">
+      <ng-container *ngFor="let control of contactInfoArray.controls; let i = index">
+        <ng-container [formGroupName]="i">
+          <div class="mb-3">
+            <label class="form-label">Tipo</label>
+            <select formControlName="type">
+              <option value="P">Telefono</option>
+              <option value="E">Correo</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Telefono/Correo</label>
+            <input formControlName="contact" class="form-control" />
+          </div>
+          <button class="btn btn-danger" (click)="removeContactInfo(i)">X</button>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+
+
+    <button class="btn btn-primary">Ingresar</button>
+  </form>
+</div>

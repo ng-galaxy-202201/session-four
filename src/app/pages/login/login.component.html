@@ -1,0 +1,103 @@
+<h1>Uso de Formulario de template de forma independiente NgModel </h1>
+<div class="container pt-2">
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Correo</label>
+    <input
+      [(ngModel)]="username"
+      type="email"
+      class="form-control"
+      id="exampleFormControlInput1"
+      required
+      minlength="6"
+      appEmailFormat
+      #usernameField="ngModel"
+    />
+
+    <div *ngIf="usernameField.hasError('required')">
+      Este campo es requerido
+    </div>
+    <div *ngIf="usernameField.hasError('minlength')">
+      El minimo de caracteres es
+      {{ usernameField.getError("minlength").requiredLength }}
+    </div>
+    <div *ngIf="usernameField.hasError('emailFormat')">
+      {{ usernameField.getError("emailFormat") }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlInput2" class="form-label">Contraseña</label>
+    <input
+      [(ngModel)]="password"
+      type="password"
+      class="form-control"
+      id="exampleFormControlInput2"
+      required
+      #passwordField="ngModel"
+    />
+
+    <span *ngIf="passwordField.invalid">Este campo es requerido</span>
+  </div>
+
+  <button
+    class="btn btn-primary"
+    [disabled]="!(usernameField.valid && passwordField.valid)"
+  >
+    Ingresar
+  </button>
+</div>
+
+<h1>Uso de Formulario de template de forma grupal NgForm </h1>
+
+<div class="container pt-2">
+  <form #loginForm="ngForm" (ngSubmit)="saveWithNgForm(loginForm)">
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Correo</label>
+      <input
+        [ngModel]="username"
+        name="username"
+        type="email"
+        class="form-control"
+        id="exampleFormControlInput1"
+        required
+        minlength="6"
+        appEmailFormat
+        #usernameField="ngModel"
+      />
+
+      <div *ngIf="usernameField.hasError('required')">
+        Este campo es requerido
+      </div>
+      <div *ngIf="usernameField.hasError('minlength')">
+        El minimo de caracteres es
+        {{ usernameField.getError("minlength").requiredLength }}
+      </div>
+      <div *ngIf="usernameField.hasError('emailFormat')">
+        {{ usernameField.getError("emailFormat") }}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput2" class="form-label"
+        >Contraseña</label
+      >
+      <input
+        [ngModel]="password"
+        name="password"
+        type="password"
+        class="form-control"
+        id="exampleFormControlInput2"
+        required
+        #passwordField="ngModel"
+      />
+
+      <span *ngIf="passwordField.invalid">Este campo es requerido</span>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="loginForm.invalid"
+    >
+      Ingresar
+    </button>
+  </form>
+</div>
